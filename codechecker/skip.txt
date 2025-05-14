@@ -1,0 +1,4 @@
+-*/mcuboot/*
+-*/modules/*
+-*/zephyr/*
+-*/toolchains/*

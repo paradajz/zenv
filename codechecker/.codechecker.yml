@@ -1,0 +1,10 @@
+analyzer:
+  - --enable=sensitive
+  - --disable=clang-diagnostic-reserved-identifier
+  - --disable=clang-diagnostic-missing-field-initializers
+  - --ignore=$ZEPHYR_WS/zenv/codechecker/skip.txt
+  - --clean
+  - --no-missing-checker-error
+
+parse:
+  - --ignore=$ZEPHYR_WS/zenv/codechecker/skip.txt

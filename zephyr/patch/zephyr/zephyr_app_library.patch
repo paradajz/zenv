@@ -1,0 +1,53 @@
+diff --git a/cmake/modules/extensions.cmake b/cmake/modules/extensions.cmake
+index 0102e32b332..c8c71b09e28 100644
+--- a/cmake/modules/extensions.cmake
++++ b/cmake/modules/extensions.cmake
+@@ -432,6 +432,11 @@ macro(zephyr_library)
+   zephyr_library_named(${lib_name})
+ endmacro()
+ 
++macro(zephyr_app_library)
++  zephyr_library_get_current_dir_lib_name(${ZEPHYR_BASE} lib_name)
++  zephyr_app_library_named(${lib_name})
++endmacro()
++
+ # Determines what the current directory's lib name would be according to the
+ # provided base and writes it to the argument "lib_name"
+ macro(zephyr_library_get_current_dir_lib_name base lib_name)
+@@ -462,6 +467,19 @@ macro(zephyr_library_named name)
+   target_link_libraries(${name} PUBLIC zephyr_interface)
+ endmacro()
+ 
++# Constructor with an explicitly given name.
++macro(zephyr_app_library_named name)
++  # This is a macro because we need add_library() to be executed
++  # within the scope of the caller.
++  set(ZEPHYR_CURRENT_LIBRARY ${name})
++  add_library(${name} STATIC "")
++
++  zephyr_append_cmake_library(${name})
++  set_property(GLOBAL APPEND PROPERTY ZEPHYR_APP_LIBS ${name})
++
++  target_link_libraries(${name} PUBLIC zephyr_interface)
++endmacro()
++
+ # Provides amend functionality to a Zephyr library for out-of-tree usage.
+ #
+ # When called from a Zephyr module, the corresponding zephyr library defined
+diff --git a/cmake/modules/kernel.cmake b/cmake/modules/kernel.cmake
+index 6a1a48b172d..01ffcb741bc 100644
+--- a/cmake/modules/kernel.cmake
++++ b/cmake/modules/kernel.cmake
+@@ -64,6 +64,12 @@ May include isr_tables.c etc."
+   )
+ set_property(GLOBAL PROPERTY GENERATED_KERNEL_SOURCE_FILES "")
+ 
++define_property(GLOBAL PROPERTY ZEPHYR_APP_LIBS
++    BRIEF_DOCS "Global list of all Zephyr CMake libs that should be linked with application (app target)"
++    FULL_DOCS  "Global list of all Zephyr CMake libs that should be linked with application (app target).
++zephyr_app_library() appends libs to this list.")
++set_property(GLOBAL PROPERTY ZEPHYR_APP_LIBS "")
++
+ add_custom_target(code_data_relocation_target)
+ 
+ # The zephyr/runners.yaml file in the build directory is used to
