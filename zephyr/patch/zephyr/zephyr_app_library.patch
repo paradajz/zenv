@@ -1,8 +1,8 @@
 diff --git a/cmake/modules/extensions.cmake b/cmake/modules/extensions.cmake
-index 0102e32b332..c8c71b09e28 100644
+index 1eef042e88c..7b11238c585 100644
 --- a/cmake/modules/extensions.cmake
 +++ b/cmake/modules/extensions.cmake
-@@ -432,6 +432,11 @@ macro(zephyr_library)
+@@ -434,6 +434,11 @@ macro(zephyr_library)
    zephyr_library_named(${lib_name})
  endmacro()
  
@@ -14,11 +14,10 @@ index 0102e32b332..c8c71b09e28 100644
  # Determines what the current directory's lib name would be according to the
  # provided base and writes it to the argument "lib_name"
  macro(zephyr_library_get_current_dir_lib_name base lib_name)
-@@ -462,6 +467,19 @@ macro(zephyr_library_named name)
+@@ -469,6 +474,18 @@ macro(zephyr_library_named name)
    target_link_libraries(${name} PUBLIC zephyr_interface)
  endmacro()
  
-+# Constructor with an explicitly given name.
 +macro(zephyr_app_library_named name)
 +  # This is a macro because we need add_library() to be executed
 +  # within the scope of the caller.
@@ -33,14 +32,14 @@ index 0102e32b332..c8c71b09e28 100644
 +
  # Provides amend functionality to a Zephyr library for out-of-tree usage.
  #
- # When called from a Zephyr module, the corresponding zephyr library defined
+ # Usage:
 diff --git a/cmake/modules/kernel.cmake b/cmake/modules/kernel.cmake
-index 6a1a48b172d..01ffcb741bc 100644
+index af9c85d80e3..886b08cae6f 100644
 --- a/cmake/modules/kernel.cmake
 +++ b/cmake/modules/kernel.cmake
-@@ -64,6 +64,12 @@ May include isr_tables.c etc."
-   )
- set_property(GLOBAL PROPERTY GENERATED_KERNEL_SOURCE_FILES "")
+@@ -34,6 +34,12 @@ define_property(GLOBAL PROPERTY ZEPHYR_LIBS
+ zephyr_library() appends libs to this list.")
+ set_property(GLOBAL PROPERTY ZEPHYR_LIBS "")
  
 +define_property(GLOBAL PROPERTY ZEPHYR_APP_LIBS
 +    BRIEF_DOCS "Global list of all Zephyr CMake libs that should be linked with application (app target)"
@@ -48,6 +47,6 @@ index 6a1a48b172d..01ffcb741bc 100644
 +zephyr_app_library() appends libs to this list.")
 +set_property(GLOBAL PROPERTY ZEPHYR_APP_LIBS "")
 +
- add_custom_target(code_data_relocation_target)
- 
- # The zephyr/runners.yaml file in the build directory is used to
+ define_property(GLOBAL PROPERTY ZEPHYR_INTERFACE_LIBS
+     BRIEF_DOCS "Global list of all Zephyr interface libs that should be linked in."
+     FULL_DOCS  "Global list of all Zephyr interface libs that should be linked in.
