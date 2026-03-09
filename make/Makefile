@@ -61,11 +61,14 @@ app: $(BUILD_CONFIGURED_APP_FILE)
 	@cp $(BUILD_DIR_APP)/app/compile_commands.json $(ZEPHYR_PROJECT)/compile_commands.json # For VSCode
 
 tests:
-ifeq ($(RUN),1)
-	@$(ZEPHYR_BASE)/scripts/twister -T $(TESTS_DIR) -O $(BUILD_DIR_TESTS) -n --enable-valgrind
-else
-	@$(ZEPHYR_BASE)/scripts/twister -T $(TESTS_DIR) -O $(BUILD_DIR_TESTS) -b -n
-endif
+	@$(ZEPHYR_BASE)/scripts/twister \
+	-T $(TESTS_DIR) \
+	-O $(BUILD_DIR_TESTS) \
+	$(if $(filter 1,$(RUN)),,-b) \
+	$(if $(filter 1,$(RUN)),--enable-valgrind,) \
+	-n \
+	$(if $(TAG),-t $(TAG),) \
+	$(if $(TEST),-s $(TEST).test,)
 
 flash: app
 ifeq ($(FLASH_RUNNER),null)
