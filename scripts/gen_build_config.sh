@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Parse the provided YAML file, generate a cmake-only west build
+# Parse the provided YAML file, generate a CMake-only west build
 # command and execute it.
 
 for arg in "$@"
@@ -41,7 +41,7 @@ fi
 
 if [[ $($yaml_parser "$presets_file" "presets.(name=${preset})") == "null" ]]
 then
-    echo "Preset $preset not found in $presets_file file"
+    echo "Preset $preset not found in $presets_file"
     exit 1
 fi
 
@@ -51,7 +51,7 @@ if [[ ($board != "null") && (-n $board) ]]
 then
     west_cmd+="-b $board "
 else
-    echo "Board not specified in $presets_file file"
+    echo "Board not specified in $presets_file"
     exit 1
 fi
 

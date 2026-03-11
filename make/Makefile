@@ -1,5 +1,5 @@
-# Thin wrapper around west/cmake build system used in Zephyr for simpler usage.
-# This is used as task runner only, not as the build system.
+# Thin wrapper around the west/CMake build system used in Zephyr.
+# This is only a task runner, not the build system itself.
 
 SHELL          := /bin/bash
 FIND           := find 2>/dev/null
@@ -18,7 +18,7 @@ endif
 PRESET       := $(shell dasel -p yaml --plain -f $(PRESETS_FILE) presets.[0].name)
 FLASH_RUNNER := $(shell dasel -n -p yaml --plain -f $(PRESETS_FILE) "presets.(name=$(PRESET)).flash-runner")
 
-# Quicker way of specifying debug build, eg. make DEBUG=1 compared to make BUILD_TYPE=debug
+# Quicker way to specify a debug build, e.g. `make DEBUG=1` instead of `make BUILD_TYPE=debug`.
 ifeq ($(DEBUG), 1)
     BUILD_TYPE := debug
 endif

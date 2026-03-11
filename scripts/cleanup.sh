@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# Used when starting the container via VSCode.
+# Used when starting the container via VS Code.
 # The script will remove the .west-updated indicator so that the initial build
 # sets everything up correctly. Otherwise, inconsistent state can occur, for
-# example, .west-updated indicator might exist, but since the container has been
-# closed, upon opening the container, west will not be updated resulting in possible
+# example, the `.west-updated` indicator might exist, but after the container
+# has been closed and reopened, `west` will not be updated, which can result in
 # build failures.
 
 remove()

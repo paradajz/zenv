@@ -1,7 +1,7 @@
 set(GLOBAL_CONF_FILE "$ENV{ZEPHYR_WS}/zenv/kconfig/test.conf")
 
-if(EXISTS "$ENV{ZEPHYR_PROJECT}/test/global.conf")
-    set(GLOBAL_CONF_FILE "$ENV{ZEPHYR_PROJECT}/test/global.conf")
+if(EXISTS "$ENV{ZEPHYR_PROJECT}/tests/global.conf")
+    set(GLOBAL_CONF_FILE "$ENV{ZEPHYR_PROJECT}/tests/global.conf")
 endif()
 
 list(APPEND CONF_FILE "${GLOBAL_CONF_FILE}")

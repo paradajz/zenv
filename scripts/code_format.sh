@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Format the application code with clang-format.
-# The script checks whether a .clang-format file exists in the application
+# The script checks whether a `.clang-format` file exists in the application
 # directory and uses it if it does. Otherwise, a file from this repository
-# is used. The script will return an error if any changes exist in the
-# directories where the application code is located.
+# is used. The script returns an error if formatting changes are detected in
+# the directories where the application code is located.
 
 cd "$ZEPHYR_PROJECT" || exit 1
 
