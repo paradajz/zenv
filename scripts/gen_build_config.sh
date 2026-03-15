@@ -58,16 +58,11 @@ fi
 west_cmd+=" -- "
 west_cmd+="-DPRESET_CMAKE_FILE=${source_dir}/$($yaml_parser "$presets_file" "presets.(name=${preset}).cmake-file") "
 
-zenv_global_conf_file="${ZEPHYR_WS}/zenv/kconfig/app.conf"
 user_global_conf_file="${ZEPHYR_PROJECT}/app/global.conf"
-
-west_cmd+="-DCONF_FILE="
 
 if [[ -f $user_global_conf_file ]]
 then
-    west_cmd+="${user_global_conf_file}"
-else
-    west_cmd+="${zenv_global_conf_file}"
+    west_cmd+="-DCONF_FILE=${user_global_conf_file}"
 fi
 
 append_config_files()

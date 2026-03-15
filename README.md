@@ -62,7 +62,7 @@ presets:
 
 `presets.yml` is a YAML file that is automatically parsed when the `make` command is run inside the application repository. Parsing `presets.yml` generates a corresponding `west build` command, which is then run via `make`. Note that the generated build command enables sysbuild by default.
 
-Some Kconfig options are enabled for all presets by default. These are defined in `kconfig/app.conf` file. Users can use alternative common options. To do so, create an `app/global.conf` file in the application repository and list the options there.
+Kconfig options can be enabled for all presets by default. To do so, create a `app/global.conf` file in the application repository and list the options there. The options will be automatically be added to the build.
 
 #### `name`
 
@@ -144,7 +144,7 @@ make tests RUN=1 TAG=<tag>
 
 By default, tests are run through Valgrind to detect possible memory leaks.
 
-Some Kconfig options are enabled for all tests by default. These are defined in `kconfig/test.conf` file. Users can use alternative common options. To do so, create a `tests/global.conf` file in the application repository and list the options there.
+Kconfig options can be enabled for all tests by default. To do so, create a `tests/global.conf` file in the application repository and list the options there. The options will be automatically be added to the build.
 
 ### Code formatting
 

@@ -1,10 +1,7 @@
-set(GLOBAL_CONF_FILE "$ENV{ZEPHYR_WS}/zenv/kconfig/test.conf")
-
 if(EXISTS "$ENV{ZEPHYR_PROJECT}/tests/global.conf")
-    set(GLOBAL_CONF_FILE "$ENV{ZEPHYR_PROJECT}/tests/global.conf")
+    list(APPEND CONF_FILE "$ENV{ZEPHYR_PROJECT}/tests/global.conf")
 endif()
 
-list(APPEND CONF_FILE "${GLOBAL_CONF_FILE}")
 find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})
 
 target_sources(app
