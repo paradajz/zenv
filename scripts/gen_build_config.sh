@@ -56,6 +56,7 @@ else
 fi
 
 west_cmd+=" -- "
+west_cmd+="-DPRESET_NAME=${preset} "
 west_cmd+="-DPRESET_CMAKE_FILE=${source_dir}/$($yaml_parser "$presets_file" "presets.(name=${preset}).cmake-file") "
 
 user_global_conf_file="${ZEPHYR_PROJECT}/app/global.conf"
