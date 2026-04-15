@@ -60,7 +60,7 @@ app: $(BUILD_CONFIGURED_APP_FILE)
 	@cd $(BUILD_DIR_APP) && west build
 	@cp $(BUILD_DIR_APP)/app/compile_commands.json $(ZEPHYR_PROJECT)/compile_commands.json # For VSCode
 
-tests:
+tests: $(BUILD_CONFIGURED_APP_FILE)
 	@$(ZEPHYR_BASE)/scripts/twister \
 	-T $(TESTS_DIR) \
 	-O $(BUILD_DIR_TESTS) \
