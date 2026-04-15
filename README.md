@@ -16,7 +16,6 @@ This repository hosts tools, packages, and various utilities required to run Zep
     - [Code formatting](#code-formatting)
     - [Code checking](#code-checking)
     - [Flashing application](#flashing-application)
-  - [`zephyr_app_library` and `zephyr_app_library_named` support](#zephyr_app_library-and-zephyr_app_library_named-support)
 
 ## Zephyr version and `west.yml`
 
@@ -181,18 +180,3 @@ This will flash the default preset. To flash any other preset, run the following
 ```
 make flash PRESET=preset_name
 ```
-
-## `zephyr_app_library` and `zephyr_app_library_named` support
-
-Zephyr includes the CMake macros `zephyr_library` and `zephyr_library_named` to make it simpler to define a static Zephyr library. The first macro infers the library name from its directory structure, and the second accepts the name as an argument. If the Zephyr application is composed of multiple libraries, each of those libraries needs to be manually listed in `target_link_libraries(app)`. When using `zephyr_app_library` and `zephyr_app_library_named`, the library name is appended to a global CMake property called `ZEPHYR_APP_LIBS` so that application-level libraries can be linked more easily:
-
-```
-get_property(app_libs GLOBAL PROPERTY ZEPHYR_APP_LIBS)
-
-target_link_libraries(app
-    PUBLIC
-    ${app_libs}
-)
-```
-
-Support for these two macros is added via a patch (see `zephyr/patch/zephyr/zephyr_app_library.patch`). See [Patching Zephyr](#patching-zephyr) section for more information.
