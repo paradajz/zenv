@@ -8,3 +8,4 @@ manifest:
       remote: zephyrproject-rtos
       revision: v4.3.0
       import: true
+      revision: v4.4.0

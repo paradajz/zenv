@@ -2,7 +2,7 @@ FROM ubuntu:24.04
 
 ARG project_dir=project
 ARG toolchains_path=/opt/toolchains
-ARG zsdk_version=0.17.0
+ARG zsdk_version=1.0.1
 ARG dasel_version=1.27.3
 ARG wget_args="-q --show-progress --progress=bar:force:noscroll"
 ARG zephyr_ws=/home/ubuntu/zephyr_ws
