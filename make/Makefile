@@ -34,7 +34,7 @@ WEST_UPDATED_FILE         := .west-updated
 SUBMANIFESTS_DIRECTORY    := $(ZEPHYR_PROJECT)/zephyr/west
 WEST_MANIFESTS            := west.yml
 WEST_MANIFESTS            += $(shell $(FIND) $(SUBMANIFESTS_DIRECTORY) -type f -name "*.yml")
-BUILD_CONFIGURED_APP_FILE := $(BUILD_DIR_APP)/build_configured
+BUILD_CONFIGURED_APP_FILE = $(BUILD_DIR_APP)/build_configured
 
 .DEFAULT_GOAL := app
 
@@ -45,22 +45,24 @@ $(WEST_UPDATED_FILE): $(WEST_MANIFESTS)
 	@west update
 	@touch $@
 
-$(BUILD_CONFIGURED_APP_FILE): $(WEST_UPDATED_FILE) $(PRESETS_FILE)
-	@$(SCRIPTS_DIR)/patch.sh
-	@$(SCRIPTS_DIR)/gen_build_config.sh \
-	--presets-file=$(PRESETS_FILE) \
-	--build-dir=$(BUILD_DIR_APP) \
-	--source-dir=$(APP_DIR) \
-	--preset=$(PRESET) \
-	--build-type=$(BUILD_TYPE) \
-	--check=$(CHECK)
-	@touch $@
+configure-app: $(WEST_UPDATED_FILE) $(PRESETS_FILE)
+	@if [ ! -f "$(BUILD_CONFIGURED_APP_FILE)" ]; then \
+		$(SCRIPTS_DIR)/patch.sh; \
+		$(SCRIPTS_DIR)/gen_build_config.sh \
+		--presets-file=$(PRESETS_FILE) \
+		--build-dir=$(BUILD_DIR_APP) \
+		--source-dir=$(APP_DIR) \
+		--preset=$(PRESET) \
+		$(if $(BOARD),--board=$(BOARD)) \
+		--build-type=$(BUILD_TYPE) \
+		--check=$(CHECK); \
+		touch "$(BUILD_CONFIGURED_APP_FILE)"; \
+	fi
 
-app: $(BUILD_CONFIGURED_APP_FILE)
+app: configure-app
 	@cd $(BUILD_DIR_APP) && west build
-	@cp $(BUILD_DIR_APP)/app/compile_commands.json $(ZEPHYR_PROJECT)/compile_commands.json # For VSCode
 
-tests: $(BUILD_CONFIGURED_APP_FILE)
+tests: configure-app
 	@$(ZEPHYR_BASE)/scripts/twister \
 	-T $(TESTS_DIR) \
 	-O $(BUILD_DIR_TESTS) \
@@ -68,7 +70,8 @@ tests: $(BUILD_CONFIGURED_APP_FILE)
 	$(if $(filter 1,$(RUN)),--enable-valgrind,) \
 	-n \
 	$(if $(TAG),-t $(TAG),) \
-	$(if $(TEST),-s $(TEST).test,)
+	$(if $(TEST),-s $(TEST).test,) \
+	$(TWISTER_ARGS)
 
 flash: app
 ifeq ($(FLASH_RUNNER),null)
@@ -107,4 +110,4 @@ clean-all:
 print-%:
 	@echo '$($*)'
 
-.PHONY: app tests flash flash-recover format menuconfig puncover clean clean-all
+.PHONY: app clean clean-all configure-app flash flash-recover format menuconfig puncover tests

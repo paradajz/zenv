@@ -18,6 +18,9 @@ do
         --preset=*)
             preset=${arg#--preset=}
             ;;
+        --board=*)
+            board_override=${arg#--board=}
+            ;;
         --build-type=*)
             build_type=${arg#--build-type=}
             ;;
@@ -45,25 +48,35 @@ then
     exit 1
 fi
 
-board=$($yaml_parser "$presets_file" "presets.(name=${preset}).board")
+if [[ -n $board_override ]]
+then
+    board=$board_override
+else
+    board=$($yaml_parser "$presets_file" "presets.(name=${preset}).board")
+fi
 
 if [[ ($board != "null") && (-n $board) ]]
 then
     west_cmd+="-b $board "
-else
-    echo "Board not specified in $presets_file"
-    exit 1
+fi
+
+cmake_file=$($yaml_parser "$presets_file" "presets.(name=${preset}).cmake-file")
+
+if [[ ($cmake_file != "null") && (-n $cmake_file) ]]
+then
+    west_cmd+="-DPRESET_CMAKE_FILE=${source_dir}/${cmake_file} "
 fi
 
 west_cmd+=" -- "
 west_cmd+="-DPRESET_NAME=${preset} "
-west_cmd+="-DPRESET_CMAKE_FILE=${source_dir}/$($yaml_parser "$presets_file" "presets.(name=${preset}).cmake-file") "
 
 user_global_conf_file="${ZEPHYR_PROJECT}/app/global.conf"
+conf_file_started=0
 
 if [[ -f $user_global_conf_file ]]
 then
     west_cmd+="-DCONF_FILE=${user_global_conf_file}"
+    conf_file_started=1
 fi
 
 append_config_files()
@@ -81,10 +94,16 @@ append_config_files()
 
         if [[ ($conf_file != "null") && (-n $conf_file) ]]
         then
-            # When there are multiple config files, a list value needs to be passed to CMake which is normally separated
-            # with ; character. Since the passing occurs via CLI, ; needs to be escaped.
-            west_cmd+="\;"
-            west_cmd+=${source_dir}/${conf_file}
+            if [[ $conf_file_started -eq 0 ]]
+            then
+                west_cmd+="-DCONF_FILE=${source_dir}/${conf_file}"
+                conf_file_started=1
+            else
+                # When there are multiple config files, a list value needs to be passed to CMake which is normally separated
+                # with ; character. Since the passing occurs via CLI, ; needs to be escaped.
+                west_cmd+="\;"
+                west_cmd+=${source_dir}/${conf_file}
+            fi
         fi
     done
 }
