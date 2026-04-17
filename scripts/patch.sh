@@ -12,7 +12,7 @@ for patch_dir in "${patch_dirs[@]}"
 do
     echo "Searching for patches in $patch_dir"
 
-    readarray -d '' patches < <(find "$patch_dir" -name "*.patch" -print0)
+    readarray -d '' patches < <(find "$patch_dir" -name "*.patch" -print0 | sort -z)
 
     for patch in "${patches[@]}"
     do
