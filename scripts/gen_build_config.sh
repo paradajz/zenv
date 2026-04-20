@@ -120,11 +120,6 @@ then
     west_cmd+="-DDTC_OVERLAY_FILE=$overlay "
 fi
 
-if [[ $build_type == "debug" ]]
-then
-    west_cmd+="-DCONFIG_DEBUG_OPTIMIZATIONS=y "
-fi
-
 if [[ $check -eq 1 ]]
 then
     config_file=${ZEPHYR_WS}/zenv/codechecker/.codechecker.yml
