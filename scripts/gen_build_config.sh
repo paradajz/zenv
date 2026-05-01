@@ -60,15 +60,15 @@ then
     west_cmd+="-b $board "
 fi
 
+west_cmd+=" -- "
+west_cmd+="-DPRESET_NAME=${preset} "
+
 cmake_file=$($yaml_parser "$presets_file" "presets.(name=${preset}).cmake-file")
 
 if [[ ($cmake_file != "null") && (-n $cmake_file) ]]
 then
     west_cmd+="-DPRESET_CMAKE_FILE=${source_dir}/${cmake_file} "
 fi
-
-west_cmd+=" -- "
-west_cmd+="-DPRESET_NAME=${preset} "
 
 user_global_conf_file="${ZEPHYR_PROJECT}/app/global.conf"
 conf_file_started=0
