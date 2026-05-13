@@ -69,6 +69,7 @@ tests: configure-app
 	$(if $(filter 1,$(RUN)),,-b) \
 	$(if $(filter 1,$(RUN)),--enable-valgrind,) \
 	-n \
+	-c \
 	$(if $(TAG),-t $(TAG),) \
 	$(if $(TEST),-s $(TEST).test,) \
 	$(TWISTER_ARGS)
