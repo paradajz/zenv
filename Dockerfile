@@ -113,7 +113,7 @@ cd ${zephyr_ws}/${project_dir} && \
 west init --mf ../west.yml -l . && \
 west update && \
 west zephyr-export && \
-pip3 install -r ../zephyr/scripts/requirements.txt && \
+west packages pip --install && \
 cd ${zephyr_ws} && \
 rm -rf ${zephyr_ws}/${project_dir} && \
 sudo tee -a west.yml <<EOF
