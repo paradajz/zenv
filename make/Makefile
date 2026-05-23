@@ -47,7 +47,7 @@ $(WEST_UPDATED_FILE): $(WEST_MANIFESTS)
 
 configure-app: $(WEST_UPDATED_FILE) $(PRESETS_FILE)
 	@if [ ! -f "$(BUILD_CONFIGURED_APP_FILE)" ]; then \
-		$(SCRIPTS_DIR)/patch.sh; \
+		$(SCRIPTS_DIR)/patch.sh || exit 1; \
 		$(SCRIPTS_DIR)/gen_build_config.sh \
 		--presets-file=$(PRESETS_FILE) \
 		--build-dir=$(BUILD_DIR_APP) \
