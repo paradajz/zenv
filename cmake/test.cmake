@@ -1,5 +1,5 @@
-if(EXISTS "$ENV{ZEPHYR_PROJECT}/tests/global.conf")
-    list(APPEND CONF_FILE "$ENV{ZEPHYR_PROJECT}/tests/global.conf")
+if(EXISTS "$ENV{ZENV_PROJECT_ROOT}/tests/global.conf")
+    list(APPEND CONF_FILE "$ENV{ZENV_PROJECT_ROOT}/tests/global.conf")
 endif()
 
 find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})
@@ -18,5 +18,5 @@ target_link_libraries(app
 
 target_include_directories(app
     PRIVATE
-    $ENV{ZEPHYR_PROJECT}/tests/include
+    $ENV{ZENV_PROJECT_ROOT}/tests/include
 )

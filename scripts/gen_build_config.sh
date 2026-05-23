@@ -71,7 +71,8 @@ then
     west_cmd+="-DZENV_PRESET_CMAKE_FILE=${source_dir}/${cmake_file} "
 fi
 
-user_global_conf_file="${ZEPHYR_PROJECT}/app/global.conf"
+project_root=$(cd "${ZENV_PROJECT_ROOT:-$source_dir/..}" && pwd)
+user_global_conf_file="${project_root}/app/global.conf"
 conf_file_started=0
 
 if [[ -f $user_global_conf_file ]]
@@ -124,7 +125,7 @@ fi
 if [[ $check -eq 1 ]]
 then
     config_file=${ZEPHYR_WS}/zenv/codechecker/.codechecker.yml
-    user_config_file=${ZEPHYR_PROJECT}/.codechecker.yml
+    user_config_file=${project_root}/.codechecker.yml
 
     if [[ -f $user_config_file ]]
     then

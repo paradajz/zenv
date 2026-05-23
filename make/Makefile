@@ -1,15 +1,16 @@
 # Thin wrapper around the west/CMake build system used in Zephyr.
 # This is only a task runner, not the build system itself.
 
-SHELL          := /bin/bash
-FIND           := find 2>/dev/null
-APP_DIR        := $(ZEPHYR_PROJECT)/app
-TESTS_DIR      := $(ZEPHYR_PROJECT)/tests
-BUILD_DIR_BASE := $(ZEPHYR_PROJECT)/build
-SCRIPTS_DIR    := $(ZEPHYR_WS)/zenv/scripts
-BUILD_TYPE     := release
-CHECK          := 0
-PRESETS_FILE   := $(APP_DIR)/presets.yml
+SHELL             := /bin/bash
+FIND              := find 2>/dev/null
+ZENV_PROJECT_ROOT ?= $(CURDIR)
+APP_DIR           := $(ZENV_PROJECT_ROOT)/app
+TESTS_DIR         := $(ZENV_PROJECT_ROOT)/tests
+BUILD_DIR_BASE    := $(ZENV_PROJECT_ROOT)/build
+SCRIPTS_DIR       := $(ZEPHYR_WS)/zenv/scripts
+BUILD_TYPE        := release
+CHECK             := 0
+PRESETS_FILE      := $(APP_DIR)/presets.yml
 
 ifeq ("$(wildcard $(PRESETS_FILE))","")
 $(error "$(PRESETS_FILE) file not found")
@@ -30,11 +31,13 @@ ifeq ($(CHECK), 1)
 endif
 
 BUILD_DIR_TESTS           := $(BUILD_DIR_BASE)/tests
-WEST_UPDATED_FILE         := .west-updated
-SUBMANIFESTS_DIRECTORY    := $(ZEPHYR_PROJECT)/zephyr/west
+WEST_UPDATED_FILE         := $(ZENV_PROJECT_ROOT)/.west-updated
+SUBMANIFESTS_DIRECTORY    := $(ZENV_PROJECT_ROOT)/zephyr/west
 WEST_MANIFESTS            := west.yml
 WEST_MANIFESTS            += $(shell $(FIND) $(SUBMANIFESTS_DIRECTORY) -type f -name "*.yml")
 BUILD_CONFIGURED_APP_FILE = $(BUILD_DIR_APP)/build_configured
+
+export ZENV_PROJECT_ROOT
 
 .DEFAULT_GOAL := app
 
@@ -105,7 +108,7 @@ clean-all:
 	@echo Cleaning up.
 	@rm -rf $(BUILD_DIR_BASE)
 	@rm -rf $(CCACHE_DIR)
-	@$(SCRIPTS_DIR)/cleanup.sh
+	@rm -f $(WEST_UPDATED_FILE)
 
 # Debugging
 print-%:

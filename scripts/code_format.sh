@@ -6,10 +6,12 @@
 # is used. The script returns an error if formatting changes are detected in
 # the directories where the application code is located.
 
-cd "$ZEPHYR_PROJECT" || exit 1
+project_root=$(cd "${ZENV_PROJECT_ROOT:-$PWD}" && pwd)
+
+cd "$project_root" || exit 1
 
 clang_format_file=${ZEPHYR_WS}/zenv/clang-format/.clang-format
-user_clang_format_file=${ZEPHYR_PROJECT}/.clang-format
+user_clang_format_file=${project_root}/.clang-format
 paths=("app" "module" "tests")
 
 if [[ -f $user_clang_format_file ]]
@@ -17,7 +19,7 @@ then
     clang_format_file=$user_clang_format_file
 fi
 
-find "$ZEPHYR_PROJECT" \
+find "$project_root" \
 -regex '.*\.\(cpp\|hpp\|h\|cc\|cxx\|c\)' \
 -not -path '**build/**/*' \
 -exec clang-format -style=file:"$clang_format_file" -i {} +

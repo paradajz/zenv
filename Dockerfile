@@ -16,7 +16,6 @@ ENV ZEPHYR_TOOLCHAIN_VARIANT=zephyr
 ENV ZEPHYR_SDK_INSTALL_DIR=${toolchains_path}/zephyr-sdk-${zsdk_version}
 ENV ZEPHYR_WS=${zephyr_ws}
 ENV ZEPHYR_BASE=${zephyr_ws}/zephyr
-ENV ZEPHYR_PROJECT=${zephyr_ws}/${project_dir}
 ENV CCACHE_DIR=${ccache_dir}
 
 RUN \
