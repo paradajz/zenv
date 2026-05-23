@@ -61,13 +61,14 @@ then
 fi
 
 west_cmd+=" -- "
-west_cmd+="-DPRESET_NAME=${preset} "
+west_cmd+="-DZENV_PRESET_NAME=${preset} "
+west_cmd+="-DZENV_BUILD_TYPE=${build_type} "
 
 cmake_file=$($yaml_parser "$presets_file" "presets.(name=${preset}).cmake-file")
 
 if [[ ($cmake_file != "null") && (-n $cmake_file) ]]
 then
-    west_cmd+="-DPRESET_CMAKE_FILE=${source_dir}/${cmake_file} "
+    west_cmd+="-DZENV_PRESET_CMAKE_FILE=${source_dir}/${cmake_file} "
 fi
 
 user_global_conf_file="${ZEPHYR_PROJECT}/app/global.conf"
