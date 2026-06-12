@@ -6,10 +6,32 @@
 
 patch_dirs=()
 apply_paths=()
+declare -A seen_patch_dirs
 declare -A patch_files_by_apply_path
 declare -A patch_log_limit_by_apply_path
 
-readarray -d '' patch_dirs < <(find "$ZEPHYR_WS" -type d -path "*/zephyr/patch" -print0)
+# Search both the Zephyr workspace and the active project checkout. In
+# native CI containers, the project checkout can live outside $ZEPHYR_WS.
+# De-duplicate patch directories because local checkouts usually live under
+# $ZEPHYR_WS/project and are reachable through both roots.
+for patch_search_root in "$ZEPHYR_WS" "$ZENV_PROJECT_ROOT"
+do
+    if [[ ! -d "$patch_search_root" ]]
+    then
+        continue
+    fi
+
+    while IFS= read -r -d '' patch_dir
+    do
+        if [[ -n "${seen_patch_dirs[$patch_dir]:-}" ]]
+        then
+            continue
+        fi
+
+        patch_dirs+=("$patch_dir")
+        seen_patch_dirs[$patch_dir]=1
+    done < <(find "$patch_search_root" -type d -path "*/zephyr/patch" -print0)
+done
 
 for patch_dir in "${patch_dirs[@]}"
 do
