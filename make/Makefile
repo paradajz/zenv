@@ -31,19 +31,29 @@ ifeq ($(CHECK), 1)
 endif
 
 BUILD_DIR_TESTS           := $(BUILD_DIR_BASE)/tests
+ZENV_WEST_CONFIG          := $(BUILD_DIR_BASE)/west.config
 WEST_UPDATED_FILE         := $(ZENV_PROJECT_ROOT)/.west-updated
 SUBMANIFESTS_DIRECTORY    := $(ZENV_PROJECT_ROOT)/zephyr/west
-WEST_MANIFESTS            := west.yml
+WEST_BASE_MANIFEST        := $(ZEPHYR_WS)/west.yml
+WEST_MANIFESTS            := $(WEST_BASE_MANIFEST) $(ZENV_PROJECT_ROOT)/west.yml
 WEST_MANIFESTS            += $(shell $(FIND) $(SUBMANIFESTS_DIRECTORY) -type f -name "*.yml")
 BUILD_CONFIGURED_APP_FILE = $(BUILD_DIR_APP)/build_configured
 
 export ZENV_PROJECT_ROOT
+export WEST_CONFIG_LOCAL := $(ZENV_WEST_CONFIG)
 
 .DEFAULT_GOAL := app
 
 .NOTPARALLEL:
 
-$(WEST_UPDATED_FILE): $(WEST_MANIFESTS)
+$(ZENV_WEST_CONFIG): $(WEST_BASE_MANIFEST) $(ZENV_PROJECT_ROOT)/west.yml
+	@mkdir -p $(dir $@)
+	@printf '[manifest]\npath = %s\nfile = %s\n\n[zephyr]\nbase = zephyr\n' \
+		"$$(realpath --relative-to="$(ZEPHYR_WS)" "$(ZENV_PROJECT_ROOT)")" \
+		"$$(realpath --relative-to="$(ZENV_PROJECT_ROOT)" "$(WEST_BASE_MANIFEST)")" \
+		> $@
+
+$(WEST_UPDATED_FILE): $(ZENV_WEST_CONFIG) $(WEST_MANIFESTS)
 	@echo "Running west update..."
 	@west update
 	@touch $@
@@ -110,6 +120,7 @@ clean-all:
 	@rm -rf $(BUILD_DIR_BASE)
 	@rm -rf $(CCACHE_DIR)
 	@rm -f $(WEST_UPDATED_FILE)
+	@rm -f $(ZENV_WEST_CONFIG)
 
 # Debugging
 print-%:
