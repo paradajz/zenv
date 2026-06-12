@@ -7,6 +7,7 @@ ARG dasel_version=1.27.3
 ARG wget_args="-q --show-progress --progress=bar:force:noscroll"
 ARG zephyr_ws=/home/ubuntu/zephyr_ws
 ARG ccache_dir=${zephyr_ws}/${project_dir}/ccache
+ARG west_update_args="--narrow -o=--depth=1"
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV LANG=en_US.UTF-8
@@ -106,13 +107,14 @@ ADD west.yml ${zephyr_ws}/west.yml
 RUN \
 python3 -m venv ${zephyr_ws}/.venv && \
 . ${zephyr_ws}/.venv/bin/activate && \
-pip install west codechecker && \
+pip install --no-cache-dir west codechecker && \
 mkdir -p ${zephyr_ws}/${project_dir} && \
 cd ${zephyr_ws}/${project_dir} && \
 west init --mf ../west.yml -l . && \
-west update && \
+west update ${west_update_args} && \
 west zephyr-export && \
 west packages pip --install && \
+rm -rf /home/ubuntu/.cache/pip && \
 cd ${zephyr_ws} && \
 rm -rf ${zephyr_ws}/${project_dir} && \
 sudo tee -a west.yml <<EOF
