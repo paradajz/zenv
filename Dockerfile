@@ -78,7 +78,7 @@ cd ${toolchains_path} && \
 ARCH=$(uname -m); \
 wget ${wget_args} https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v${zsdk_version}/zephyr-sdk-${zsdk_version}_linux-${ARCH}_minimal.tar.xz && \
 tar xvf zephyr-sdk-${zsdk_version}_linux-${ARCH}_minimal.tar.xz && \
-zephyr-sdk-${zsdk_version}/setup.sh -t arm-zephyr-eabi -t ${ARCH}-zephyr-elf -t xtensa-espressif_esp32_zephyr-elf -t xtensa-espressif_esp32s3_zephyr-elf -h -c && \
+zephyr-sdk-${zsdk_version}/setup.sh -t arm-zephyr-eabi -t ${ARCH}-zephyr-elf -t riscv64-zephyr-elf -t xtensa-espressif_esp32_zephyr-elf -t xtensa-espressif_esp32s3_zephyr-elf -h -c && \
 rm zephyr-sdk-${zsdk_version}_linux-${ARCH}_minimal.tar.xz
 
 # Dasel - YAML/JSON parsing tool
